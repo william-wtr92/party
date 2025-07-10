@@ -53,7 +53,7 @@ const appConfigSchema = z
   .strict()
 
 const appConfig = appConfigSchema.parse({
-  port: parseInt(process.env.PORT!, 10),
+  port: parseInt(process.env.SERVER_PORT!, 10),
   db: {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
