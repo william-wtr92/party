@@ -1,7 +1,6 @@
 "use client"
 
 import Loader from "@client/web/components/layout/Loader"
-import LeafletMap from "@client/web/components/pages/map/LeafletMap"
 import { filterTypeValues, type FilterType } from "@client/web/constants/places"
 import { useAppContext } from "@client/web/contexts/useAppContext"
 import { getPlacesByName } from "@client/web/services/places/getPlacesByName"
@@ -19,6 +18,12 @@ import {
 } from "@client/web/utils/places/processSearchedPlacesData"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
+import dynamic from "next/dynamic"
+
+const LeafletMap = dynamic(
+  () => import("@client/web/components/pages/map/LeafletMap"),
+  { ssr: false }
+)
 
 const MapPage = () => {
   const {

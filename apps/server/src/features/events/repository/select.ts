@@ -85,7 +85,7 @@ const buildSearchConditions = (data: SearchEventsSchemaType) => {
     data.price
       ? lte(eventSummary.eventPrice, data.price.toString())
       : undefined,
-    data.slots ? gte(eventSummary.totalSlots, data.slots) : undefined,
+    data.slots ? gte(eventSummary.totalSlots, Number(data.slots)) : undefined,
     data.remainingSlots
       ? gte(eventSummary.availableSlots, data.remainingSlots)
       : undefined

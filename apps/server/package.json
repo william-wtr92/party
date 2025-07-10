@@ -4,9 +4,10 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "db:generate:custom": "pnpm exec drizzle-kit generate --custom",
-    "db:generate": "pnpm exec drizzle-kit generate",
-    "db:migrate": "pnpm exec drizzle-kit migrate",
-    "db:drop": "pnpm exec drizzle-kit drop"
+    "db:generate": "pnpm exec drizzle-kit generate --config ./src/drizzle.config.ts",
+    "db:migrate": "pnpm exec drizzle-kit migrate --config ./src/drizzle.config.ts",
+    "db:drop": "pnpm exec drizzle-kit drop",
+    "build": "tsc && tsc-alias"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
@@ -30,6 +31,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "prettier": "^3.3.3",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.7.1",
     "typescript": "^5"
   }

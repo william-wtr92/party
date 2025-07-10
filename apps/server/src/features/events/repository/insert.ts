@@ -1,4 +1,4 @@
-import type { InsertEventSchemaType } from "@packages/common/features/events"
+import type { InsertEventSchemaType } from "@party/common"
 import { db } from "@server/db/client"
 import {
   addresses,
@@ -25,7 +25,7 @@ export const insertEvent = async (
         slots: data.slots,
         remainingSlots: data.slots,
         free: data.free,
-        price: data.price,
+        price: data.price.toString(),
       })
       .returning({ insertedId: events.id })
 

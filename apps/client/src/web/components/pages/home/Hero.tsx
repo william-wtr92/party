@@ -1,9 +1,8 @@
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import React from "react"
 
 import Button from "../../Button"
-import { routes } from "@client/routes"
+import { routes } from "@client/web/utils/routes"
 
 const Hero = () => {
   const router = useRouter()

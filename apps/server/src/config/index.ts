@@ -44,6 +44,7 @@ const appConfigSchema = z
       }),
     }),
     redis: z.object({
+      host: z.string(),
       port: z.string(),
       username: z.string(),
       password: z.string(),
@@ -91,6 +92,7 @@ const appConfig = appConfigSchema.parse({
     },
   },
   redis: {
+    host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
     username: process.env.REDIS_USERNAME,
     password: process.env.REDIS_PASSWORD,

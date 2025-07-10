@@ -1,13 +1,13 @@
 "use client"
 
-import type { EventSummaryType } from "@packages/common/features/events"
+import type { EventSummaryType } from "@party/common"
 import {
   motion,
   useInView,
   useMotionValueEvent,
   useScroll,
 } from "framer-motion"
-import React, { useRef, useState } from "react"
+import { useRef, useState } from "react"
 
 import EventCard from "@client/web/components/pages/home/EventCard"
 import type { TabTypes } from "@client/web/components/pages/home/EventsAndPlacesTabs"
@@ -123,10 +123,20 @@ const EventsAndPlacesList = (props: Props) => {
           </motion.div>
         ))}
 
-      {selectedTab === "events" &&
+      {selectedTab === "events" && eventsList.length > 0 ? (
         eventsList.map((event, index) => (
           <EventCard key={index} event={event} />
-        ))}
+        ))
+      ) : (
+        <motion.div
+          className="flex h-[300px] w-full items-center justify-center"
+          variants={card}
+        >
+          <span className="text-[1.5rem] font-semibold">
+            No events found near you!
+          </span>
+        </motion.div>
+      )}
 
       {displaySeeMoreButton() && (
         <SeeMoreButton scrollFn={scrollRight} isAtTheEnd={isAtTheEnd} />

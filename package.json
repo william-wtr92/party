@@ -7,6 +7,10 @@
     "format:check": "prettier -c \"**/*.{ts,tsx,md}\"",
     "dev:server": "dotenv -e .env -- pnpm --filter @party/server dev",
     "dev:client": "dotenv -e .env -- pnpm --filter @party/client dev",
+    "build:client": "dotenv -e .env -- pnpm --filter @party/client build",
+    "build:server": "dotenv -e .env -- pnpm --filter @party/server build",
+    "db:generate": "dotenv -e .env -- pnpm --filter @party/server db:generate",
+    "db:migrate": "dotenv -e .env -- pnpm --filter @party/server db:migrate",
     "lint": "pnpm --filter @party/client run lint && pnpm --filter @party/server run lint && pnpm --filter @party/common run lint"
   },
   "devDependencies": {

@@ -5,10 +5,9 @@ import {
   faPersonDressBurst,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import type { EventSummaryType } from "@packages/common/features/events"
+import type { EventSummaryType } from "@party/common"
 import { motion } from "framer-motion"
 import Image from "next/image"
-import React from "react"
 
 import { formatDate } from "@client/web/utils/formatDate"
 import { getRandomInt } from "@client/web/utils/getRandomInt"
@@ -99,7 +98,7 @@ const EventCard = (props: Props) => {
 
         <div className="flex items-end justify-between">
           <span className="text-[1.3rem]">
-            {Number.parseInt(event.eventPrice) > 0
+            {event && event.eventPrice && Number.parseInt(event.eventPrice) > 0
               ? `${event.eventPrice}€`
               : "Free"}
           </span>

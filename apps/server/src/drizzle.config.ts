@@ -1,5 +1,6 @@
-import appConfig from "@server/config"
 import { defineConfig } from "drizzle-kit"
+
+import appConfig from "./config"
 
 const {
   user,

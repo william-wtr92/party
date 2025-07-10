@@ -1,6 +1,5 @@
 "use client"
 
-import { useToast } from "@client/hooks/use-toast"
 import EventsAndPlacesList from "@client/web/components/pages/home/EventsAndPlacesList"
 import EventsAndPlacesTabs, {
   type TabTypes,
@@ -22,8 +21,6 @@ export default function Home() {
       events: { getEventsBySearch },
     },
   } = useAppContext()
-
-  const { toast } = useToast()
 
   const [selectedTab, setSelectedTab] = useState<TabTypes>("events")
 
@@ -52,18 +49,6 @@ export default function Home() {
           selectedTab={selectedTab}
           setSelectedTab={setSelectedTab}
         />
-
-        <button
-          onClick={() =>
-            toast({
-              variant: "default",
-              title: "This is a toast message",
-              description: "This is a description",
-            })
-          }
-        >
-          dzadkndakldnkzla
-        </button>
 
         <AnimatePresence mode="wait">
           <EventsAndPlacesList

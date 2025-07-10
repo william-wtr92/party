@@ -4,10 +4,11 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "outDir": "./dist",
+    "rootDir": "./src",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "noUnusedLocals": false,
     "composite": true,
     "noUnusedParameters": false,
@@ -18,6 +19,10 @@
       "@common/*": ["../../packages/common/*"]
     }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "migrations"]
+  "include": ["src/**/*.ts", "src/drizzle.config.ts"],
+  "exclude": ["node_modules", "dist", "migrations"],
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "verbose": false
+  }
 }

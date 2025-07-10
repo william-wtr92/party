@@ -1,0 +1,74 @@
+
+
+services:
+  client:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.client
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL_DOCKER}
+    environment:
+      NODE_ENV: production
+      PORT: 3002
+    ports:
+      - "3002:3002"
+    networks:
+      - party_network
+
+  server:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.server
+      target: production
+    environment:
+      NODE_ENV: production
+      SERVER_PORT: ${SERVER_PORT}
+      DB_HOST: ${POSTGRES_HOST_DOCKER}
+      DB_PORT: ${POSTGRES_PORT_DOCKER}
+      DB_USER: ${POSTGRES_USER_DOCKER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD_DOCKER}
+      DB_NAME: ${POSTGRES_DB_DOCKER}
+      REDIS_HOST: ${REDIS_HOST_DOCKER}
+      REDIS_PORT: ${REDIS_PORT_DOCKER}
+      REDIS_USERNAME: ${REDIS_USERNAME_DOCKER}
+      REDIS_PASSWORD: ${REDIS_PASSWORD_DOCKER}
+      REDIS_DB: ${REDIS_DB_DOCKER}
+      SECURITY_JWT_SECRET: ${SECURITY_JWT_SECRET}
+      SECURITY_PASSWORD_PEPPER: ${SECURITY_PASSWORD_PEPPER}
+      SECURITY_COOKIE_SECRET: ${SECURITY_COOKIE_SECRET}
+      CORS_ORIGIN: ${CORS_ORIGIN_DOCKER}
+    ports:
+      - "3001:3001"
+    networks:
+      - party_network
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_DOCKER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_DOCKER}
+      POSTGRES_DB: ${POSTGRES_DB_DOCKER}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 3s
+      retries: 10
+    networks:
+      - party_network
+    
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    networks:
+      - party_network
+ 
+networks:
+  party_network:
+    driver: bridge

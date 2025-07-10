@@ -1,6 +1,6 @@
 "use client"
 
-import { routes } from "@client/routes"
+import { routes } from "@client/web/utils/routes"
 import Button from "@client/web/components/Button"
 import Avatar from "@client/web/components/layout/Avatar"
 import NavbarTitle from "@client/web/components/layout/NavbarTitle"

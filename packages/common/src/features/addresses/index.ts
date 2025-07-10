@@ -8,7 +8,7 @@ export const addressSchema = z.object({
   street: z.string(),
   country: z.string(),
   postalCode: z.string(),
-  extra: z.string(),
+  extra: z.string().optional().nullable(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
 })

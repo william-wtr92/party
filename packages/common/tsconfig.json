@@ -15,5 +15,9 @@
     "types": ["node"]
   },
   "include": ["shared/**/*.ts", "index.ts"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist"],
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "verbose": false
+  }
 }
