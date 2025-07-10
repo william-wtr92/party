@@ -1,0 +1,33 @@
+meta {
+  name: Create Event
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{url}}/events
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Test 3",
+    "type": "Conférence",
+    "startDate": "2024-12-01T09:00:00Z",
+    "endDate": "2024-12-01T17:00:00Z",
+    "slots": 100,
+    "remainingSlots": 100,
+    "free": true,
+    "price": null,
+    "typeSpecificData": "Conférence sur l'IA et la technologie",
+    "participants": 50,
+    "city": "Lyon",
+    "region": "Auvergne-Rhône-Alpes",
+    "streetNumber": "456",
+    "street": "Rue de la République",
+    "country": "France",
+    "postalCode": "69002",
+    "extra": "Appartement 12B"
+  }
+}

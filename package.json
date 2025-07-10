@@ -1,0 +1,21 @@
+{
+  "name": "party",
+  "version": "1.0.0",
+  "description": "Party is a party planning application that allows users to create and manage events.",
+  "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format:check": "prettier -c \"**/*.{ts,tsx,md}\"",
+    "dev:server": "dotenv -e .env -- pnpm --filter @party/server dev",
+    "dev:client": "dotenv -e .env -- pnpm --filter @party/client dev",
+    "lint": "eslint --ext .ts,.tsx ."
+  },
+  "devDependencies": {
+    "dotenv-cli": "^8.0.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.8"
+  },
+  "packageManager": "pnpm@10.11.0",
+  "engines": {
+    "node": ">=20"
+  }
+}

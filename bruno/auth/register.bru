@@ -1,0 +1,30 @@
+meta {
+  name: register
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{url}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "John Doe",
+    "email": "johndoe@example.com",
+    "phone": "+1234567890",
+    "birthdate": "1990-01-01",
+    "password": "SecurePassword123",
+    "confirmPassword": "SecurePassword123",
+    "interests": "Programming, Hiking, Reading",
+    "city": "Paris",
+    "region": "Île-de-France",
+    "streetNumber": "123",
+    "street": "Rue de l'Exemple",
+    "country": "France",
+    "postalCode": "75001",
+    "extra": "Additional details here"
+  }
+}

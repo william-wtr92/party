@@ -1,0 +1,560 @@
+{
+	"info": {
+		"_postman_id": "6b417e9e-2ef8-4cba-9153-a6cd0a57304c",
+		"name": "party",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19707744"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"WTest\",\n  \"email\": \"test@example.com\",\n  \"password\": \"test123!\",\n  \"confirmPassword\": \"test123!\",\n  \"phone\": \"+1234567894544\",\n  \"birthdate\": \"1990-05-15T00:00:00.000Z\",\n  \"interests\": \"music, sports\",\n  \"city\": \"Paris\",\n  \"region\": \"Île-de-France\",\n  \"streetNumber\": \"123\",\n  \"street\": \"Avenue des Champs-Élysées\",\n  \"country\": \"France\",\n  \"postalCode\": \"75008\",\n  \"extra\": \"Salle de conférence principale\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"test123!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Me",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/users/me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"test\",\n  \"email\": \"test@example.com\",\n  \"phone\": \"+99999999\",\n  \"birthdate\": \"2000-05-15T00:00:00.000Z\",\n  \"interests\": \"uno\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Places",
+			"item": [
+				{
+					"name": "Retrieves places by search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/places/search?q=Bar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"places",
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Bar"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "retieves places by cords",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/places/search-cords?lat=48.907260&lon=2.254470",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"places",
+								"search-cords"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "48.907260"
+								},
+								{
+									"key": "lon",
+									"value": "2.254470"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "Create Event",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test 2\",\n  \"type\": \"Conférence\",\n  \"startDate\": \"2024-12-01T09:00:00Z\",\n  \"endDate\": \"2024-12-01T17:00:00Z\",\n  \"slots\": 100,\n  \"remainingSlots\": 100,\n  \"free\": true,\n  \"price\": null,\n  \"typeSpecificData\": \"Conférence sur l'IA et la technologie\",\n  \"participants\": 50,\n   \"city\": \"Lyon\",\n  \"region\": \"Auvergne-Rhône-Alpes\",\n  \"streetNumber\": \"456\",\n  \"street\": \"Rue de la République\",\n  \"country\": \"France\",\n  \"postalCode\": \"69002\",\n  \"extra\": \"Appartement 12B\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/events",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Event",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test 1\",\n  \"type\": \"Conférence\",\n  \"startDate\": \"2024-12-01T09:00:00Z\",\n  \"endDate\": \"2024-12-01T17:00:00Z\",\n  \"slots\": 100,\n  \"remainingSlots\": 100,\n  \"free\": true,\n  \"price\": null,\n  \"typeSpecificData\": \"Conférence sur l'IA et la technologie\",\n  \"participants\": 50,\n  \"city\": \"Lyon\",\n  \"region\": \"Auvergne-Rhône-Alpes\",\n  \"streetNumber\": \"45\",\n  \"street\": \"Rue de la République\",\n  \"country\": \"France\",\n  \"postalCode\": \"69002\",\n  \"extra\": \"Auditorium principal\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/events/:eventId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"events",
+								":eventId"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "6111a0d1-1afe-44d9-9250-14522b430f13"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete event",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/events/:eventId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"events",
+								":eventId"
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "6111a0d1-1afe-44d9-9250-14522b430f13"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/events/search?city=Paris",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"events",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Conférence%20Tech%202024",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "Conférence",
+									"disabled": true
+								},
+								{
+									"key": "startDate",
+									"value": "2024-12-01T00:00:00Z",
+									"disabled": true
+								},
+								{
+									"key": "free",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "price",
+									"value": "50.0",
+									"disabled": true
+								},
+								{
+									"key": "slots",
+									"value": "100",
+									"disabled": true
+								},
+								{
+									"key": "remainingSlots",
+									"value": "50search",
+									"disabled": true
+								},
+								{
+									"key": "city",
+									"value": "Paris"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Event by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/events/:eventId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"events",
+								":eventId"
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Participants",
+			"item": [
+				{
+					"name": "Send request to participate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/participants/:eventId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"participants",
+								":eventId"
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users Request to participate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/participants/:eventId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"participants",
+								":eventId"
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "65f5155c-9e52-45f6-8b6c-72a243a0f91c"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept or Not Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accept\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/participants/:eventId/:participationId/accept",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"participants",
+								":eventId",
+								":participationId",
+								"accept"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "65f5155c-9e52-45f6-8b6c-72a243a0f91c"
+								},
+								{
+									"key": "participationId",
+									"value": "e15742ae-85e1-482a-a512-c630e9123931"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reviews",
+			"item": [
+				{
+					"name": "Add review",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rating\": 3,\n    \"comment\": \"Trop bien\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/reviews/:eventid",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"reviews",
+								":eventid"
+							],
+							"variable": [
+								{
+									"key": "eventid",
+									"value": "d13564a9-1531-4e77-9639-6a90b90cf713"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get review on event",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/reviews/:eventId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"reviews",
+								":eventId"
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "d13564a9-1531-4e77-9639-6a90b90cf713"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

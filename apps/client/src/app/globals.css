@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "leaflet/dist/leaflet.css";
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+:root {
+  --primary: #181815;
+  --secondary: #fcf1cd;
+  --secondary-dark: #cac1a3;
+  --tertiary: #1e1d19;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  background-color: transparent !important;
+  -webkit-box-shadow: 0 0 0 50px var(--secondary) inset;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.custom-marker-image {
+  aspect-ratio: 1/1;
+  height: 36px;
+}
+
+.custom-marker:hover > .custom-marker-image {
+  animation: shake 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+path {
+  stroke-linecap: round;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(0, -15px) rotate(30deg);
+  }
+  50% {
+    transform: translate(0, -15px) rotate(-30deg);
+  }
+  75% {
+    transform: translate(0, -15px) rotate(30deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+/* Leaflet Popup component wrapper */
+.leaflet-popup-content-wrapper {
+  background-color: var(--secondary) !important;
+}
+
+@layer base {
+  .tbr {
+    border: 2px solid red;
+  }
+
+  .tbb {
+    border: 2px solid blue;
+  }
+
+  .tbg {
+    border: 2px solid green;
+  }
+
+  .quicksand {
+    font-family: var(--font-quicksand), sans-serif;
+  }
+
+  .cormorantGaramond {
+    font-family: var(--font-cormorantGaramond), serif;
+  }
+
+  .absolute-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .customBorderRadius {
+    border-radius: 100% 0% 100% 0% / 0% 50% 50% 100%;
+  }
+
+  .header-box-shadow {
+    box-shadow:
+      0 -4px 10px rgba(0, 0, 0, 0.2),
+      /* Ombre en haut */ 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .aspect-short {
+    aspect-ratio: 9/16;
+  }
+
+  .bg-glass {
+    background: rgba(24, 24, 21, 0.25);
+    backdrop-filter: blur(7.5px);
+    -webkit-backdrop-filter: blur(7.5px);
+  }
+
+  .bg-glass-hover {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(7.5px);
+    -webkit-backdrop-filter: blur(7.5px);
+  }
+
+  .bg-header-gradient {
+    background: linear-gradient(
+      to right,
+      #181815 0%,
+      rgba(0, 0, 0, 0.738) 19%,
+      rgba(0, 0, 0, 0.541) 34%,
+      rgba(0, 0, 0, 0.382) 47%,
+      rgba(0, 0, 0, 0.278) 56.5%,
+      rgba(0, 0, 0, 0.194) 65%,
+      rgba(0, 0, 0, 0.126) 73%,
+      rgba(0, 0, 0, 0.075) 80.2%,
+      rgba(0, 0, 0, 0.042) 86.1%,
+      rgba(0, 0, 0, 0.021) 91%,
+      rgba(0, 0, 0, 0.008) 95.2%,
+      rgba(0, 0, 0, 0.002) 98.2%,
+      transparent 100%
+    );
+  }
+
+  .bg-overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  /* HTML: <div class="loader"></div> */
+  .loader {
+    width: 75px;
+    aspect-ratio: 1;
+    display: grid;
+  }
+  .loader:before,
+  .loader:after {
+    content: "";
+    grid-area: 1/1;
+    width: 35px;
+    aspect-ratio: 1;
+    box-shadow: 0 0 0 3px #fff inset;
+    filter: drop-shadow(40px 40px 0 #fff);
+    animation: l8 2s infinite alternate;
+  }
+  .loader:after {
+    margin: 0 0 0 auto;
+    filter: drop-shadow(-40px 40px 0 #fff);
+    animation-delay: -1s;
+  }
+
+  @keyframes l8 {
+    0%,
+    10% {
+      border-radius: 0;
+    }
+    30%,
+    40% {
+      border-radius: 50% 0;
+    }
+    60%,
+    70% {
+      border-radius: 50%;
+    }
+    90%,
+    100% {
+      border-radius: 0 50%;
+    }
+  }
+
+  .party-title-path {
+    animation-delay: 2.5s;
+    animation-name: fill;
+    animation-timing-function: ease-in-out;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes fill {
+    0% {
+      fill: transparent;
+    }
+    100% {
+      fill: white;
+    }
+  }
+  :root {
+    --radius: 0.5rem;
+  }
+}

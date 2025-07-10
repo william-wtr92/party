@@ -1,0 +1,22 @@
+meta {
+  name: Get by search
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{url}}/events/search
+  body: none
+  auth: none
+}
+
+query {
+  ~city: 
+  ~name: 
+  ~type: Meet new people
+  ~startDate: 
+  ~free: 
+  ~price: 
+  ~slots: 
+  ~remainingSlots: 
+}

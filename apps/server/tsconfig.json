@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": false,
+    "noUnusedLocals": false,
+    "composite": true,
+    "noUnusedParameters": false,
+    "types": ["node"],
+    "baseUrl": "./",
+    "paths": {
+      "@server/*": ["./src/*"],
+      "@common/*": ["../../packages/common/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "migrations"]
+}

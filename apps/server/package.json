@@ -1,0 +1,36 @@
+{
+  "name": "@party/server",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "db:generate:custom": "pnpm exec drizzle-kit generate --custom",
+    "db:generate": "pnpm exec drizzle-kit generate",
+    "db:migrate": "pnpm exec drizzle-kit migrate",
+    "db:drop": "pnpm exec drizzle-kit drop"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "@hono/zod-validator": "^0.4.1",
+    "@party/common": "workspace:*",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.37.0",
+    "drizzle-zod": "^0.5.1",
+    "hono": "^4.6.10",
+    "ioredis": "^5.4.1",
+    "postgres": "^3.4.5",
+    "undici": "^6.21.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "@typescript-eslint/eslint-plugin": "^8.14.0",
+    "@typescript-eslint/parser": "^8.14.0",
+    "drizzle-kit": "^0.28.1",
+    "eslint": "^8",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "prettier": "^3.3.3",
+    "tsx": "^4.7.1",
+    "typescript": "^5"
+  }
+}
