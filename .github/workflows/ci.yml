@@ -1,4 +1,4 @@
-name: CI
+name: 🚦 Party Monorepo - Lint & Format CI/CD
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -6,31 +6,81 @@ concurrency:
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - "main"
+    tags:
+      - "*"
+    paths:
+      - ".github/workflows/**"
+      - "apps/client/**"
+      - "apps/server/**"
+      - "packages/ui/**"
+      - "docker/prod/**"
   pull_request:
-env:
-  NEXT_TELEMETRY_DISABLED: 1
-jobs:
-  main:
-    runs-on: "ubuntu-latest"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        with:
-          version: 9
-          run_install: false
+    branches:
+      - "main"
+    paths:
+      - ".github/workflows/**"
+      - "apps/client/**"
+      - "apps/server/**"
+      - "packages/ui/**"
+      - "docker/prod/**"
 
-      - name: Use Node.js 20
+jobs:
+  lint:
+    name: 🔭 ESLint 
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    strategy:
+      matrix:
+        node-version: [22.x, "node"]
+    steps:
+      - name: 🔬 Checkout to ${{ github.ref }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      
+      - name: 🛠️ Setup pnpm
+        uses: pnpm/action-setup@v4
+        
+      - name: 🌐 Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: "pnpm"
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
-      - name: Run install
-        shell: bash
-        run: pnpm i --frozen-lockfile --ignore-scripts
-      - name: Run lint script
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🧹 Lint files
         run: pnpm run lint
-      - name: Run format script
+
+  format:
+    name: 🎨 Prettier
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    strategy:
+      matrix:
+        node-version: [22.x, "node"]
+    steps:
+      - name: 🔬 Checkout to ${{ github.ref }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      
+      - name: 🛠️ Setup pnpm
+        uses: pnpm/action-setup@v4
+        
+      - name: 🌐 Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🎨 Format files
         run: pnpm run format:check
