@@ -22,20 +22,6 @@
   },
   "rules": {
     "import/no-unresolved": "off",
-    "import/order": [
-      "error",
-      {
-        "groups": [
-          ["builtin", "external"],
-          ["internal", "parent", "sibling", "index"]
-        ],
-        "alphabetize": {
-          "order": "asc",
-          "caseInsensitive": true
-        },
-        "newlines-between": "always"
-      }
-    ],
     "@typescript-eslint/array-type": ["error", { "default": "array" }],
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/consistent-type-definitions": ["error", "type"],

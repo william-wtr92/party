@@ -2,10 +2,7 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
-  "extends": [
-    "eslint:recommended",
-    "prettier"
-  ],
+  "extends": ["eslint:recommended", "prettier"],
   "env": {
     "es2022": true,
     "node": true
@@ -13,6 +10,7 @@
   "parserOptions": {
     "sourceType": "module"
   },
+  "ignorePatterns": ["dist/"],
   "rules": {
     "@typescript-eslint/array-type": ["error", { "default": "array" }],
     "@typescript-eslint/ban-types": "off",

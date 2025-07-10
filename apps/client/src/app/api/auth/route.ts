@@ -1,7 +1,6 @@
 import { apiRoutes } from "@client/routes"
 import { cookieName } from "@client/web/constants/config"
 import { genericErrorMessages, SC } from "@server/utils/status"
-// eslint-disable-next-line import/no-named-as-default
 import Axios, { isAxiosError } from "axios"
 import { NextResponse } from "next/server"
 

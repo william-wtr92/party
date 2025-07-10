@@ -7,7 +7,7 @@
     "format:check": "prettier -c \"**/*.{ts,tsx,md}\"",
     "dev:server": "dotenv -e .env -- pnpm --filter @party/server dev",
     "dev:client": "dotenv -e .env -- pnpm --filter @party/client dev",
-    "lint": "eslint --ext .ts,.tsx ."
+    "lint": "pnpm --filter @party/client run lint && pnpm --filter @party/server run lint && pnpm --filter @party/common run lint"
   },
   "devDependencies": {
     "dotenv-cli": "^8.0.0",
