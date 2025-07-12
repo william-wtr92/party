@@ -10,12 +10,12 @@ import {
   deleteUser,
 } from "@server/features/users"
 import { auth } from "@server/middlewares/auth"
+import { redis } from "@server/utils/clients/redis"
 import { delCookie, setCookie } from "@server/utils/helpers/cookie"
 import { signJwt } from "@server/utils/helpers/jwt"
 import { contextKeys } from "@server/utils/keys/contextKeys"
 import { cookiesKeys } from "@server/utils/keys/cookiesKeys"
 import { redisKeys } from "@server/utils/keys/redisKeys"
-import { redis } from "@server/utils/redis/instance"
 import { sanitizeUser } from "@server/utils/sanitizers/usersSanitizers"
 import { SC } from "@server/utils/status"
 import { Hono } from "hono"
@@ -23,9 +23,6 @@ import { Hono } from "hono"
 const app = new Hono()
 
 export const usersRoutes = app
-  .get("/test2", (c) => {
-    return c.json({ message: "Hello, World!", id: "1" }, SC.success.OK)
-  })
   .get("/me", auth, async (c) => {
     const {
       user: { email },

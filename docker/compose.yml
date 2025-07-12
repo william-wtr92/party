@@ -37,6 +37,8 @@ services:
       SECURITY_PASSWORD_PEPPER: ${SECURITY_PASSWORD_PEPPER}
       SECURITY_COOKIE_SECRET: ${SECURITY_COOKIE_SECRET}
       CORS_ORIGIN: ${CORS_ORIGIN_DOCKER}
+      METRICS_USERNAME: ${METRICS_USERNAME}
+      METRICS_PASSWORD: ${METRICS_PASSWORD}
     ports:
       - "3001:3001"
     networks:
@@ -69,6 +71,42 @@ services:
     networks:
       - party_network
  
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+    entrypoint: /etc/prometheus/entrypoint.sh
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--enable-feature=exemplar-storage"
+    ports:
+      - "9090:9090"
+    environment:
+      METRICS_USERNAME: ${METRICS_USERNAME}
+      METRICS_PASSWORD: ${METRICS_PASSWORD}
+    networks:
+      - party_network
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    ports:
+      - "9100:9100"
+    networks:
+      - party_network
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - party_network
+
 networks:
   party_network:
     driver: bridge
+
+volumes:
+  grafana_data:

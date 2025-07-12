@@ -1,5 +1,6 @@
 import { authRoutes } from "./auth"
 import { eventsRoutes } from "./events"
+import { metricsRoute } from "./global"
 import { participantsRoutes } from "./participants"
 import { placesRoutes } from "./places"
 import { reviewsRoutes } from "./reviews"
@@ -12,4 +13,5 @@ export const routes = {
   events: eventsRoutes,
   participants: participantsRoutes,
   reviews: reviewsRoutes,
+  globals: metricsRoute,
 }

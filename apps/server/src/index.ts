@@ -7,8 +7,11 @@ import { logger } from "hono/logger"
 import { prettyJSON } from "hono/pretty-json"
 import { secureHeaders } from "hono/secure-headers"
 
+import { routeNotFound, unspecifiedErrorOccurred } from "./features/global"
 import { routes } from "./routes"
+import { registerMetrics } from "./utils/clients/prometheus"
 import { router } from "./utils/router"
+import { SC } from "./utils/status"
 
 const app = new Hono()
 
@@ -23,8 +26,19 @@ app.use(
   secureHeaders(),
   etag(),
   logger(),
-  prettyJSON()
+  prettyJSON(),
+  registerMetrics
 )
+
+/** Route Not Found Handler **/
+app.notFound((c) => {
+  return c.json(routeNotFound, SC.errors.NOT_FOUND)
+})
+
+/** Global Error Handler (Sentry) **/
+app.onError((err, c) => {
+  return c.json(unspecifiedErrorOccurred, SC.serverErrors.INTERNAL_SERVER_ERROR)
+})
 
 //eslint-disable-next-line @typescript-eslint/no-unused-vars
 const appRouter = app
@@ -34,6 +48,7 @@ const appRouter = app
   .route(router.events, routes.events)
   .route(router.participants, routes.participants)
   .route(router.reviews, routes.reviews)
+  .route(router.globals, routes.globals)
 
 serve({
   fetch: app.fetch,

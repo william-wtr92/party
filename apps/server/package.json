@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
+    "@hono/prometheus": "^1.0.2",
     "@hono/zod-validator": "^0.4.1",
     "@party/common": "workspace:*",
     "dotenv": "^16.4.5",

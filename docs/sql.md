@@ -1,20 +1,20 @@
-# README - Optimisation et Utilisation Avancée avec Drizzle ORM
+# SQL - Advanced Usage and Optimization with Drizzle ORM
 
-Ce document décrit comment utiliser Drizzle ORM pour optimiser votre application en abordant les concepts du problème des requêtes N+1, des vues matérialisées, de l'indexation, de la pagination, des requêtes préparées, des transactions et de l'implémentation de Redis pour le caching.
+This document outlines advanced techniques for optimizing your application with Drizzle ORM. It covers common performance issues such as the N+1 query problem, materialized views, indexing, pagination, prepared queries, transactions, and Redis caching.
 
-## 1. Introduction à Drizzle ORM
+## 1. Introduction to Drizzle ORM
 
-Drizzle ORM est un ORM léger et performant pour Node.js et TypeScript. Pour plus de détails sur ses performances, consultez [leurs benchmarks](https://orm.drizzle.team/benchmarks).
+Drizzle ORM is a lightweight and high-performance ORM for Node.js and TypeScript. For benchmark details, see [their official benchmarks](https://orm.drizzle.team/benchmarks).
 
-## 2. Problème des Requêtes N+1
+## 2. N+1 Query Problem
 
-Le problème des requêtes N+1 survient lorsqu'une requête initiale est suivie de multiples requêtes supplémentaires. Drizzle ORM propose des solutions pour atténuer ce problème via `leftJoin()` et `innerJoin()`.
+The N+1 problem occurs when an initial query is followed by many additional queries. Drizzle ORM helps avoid this through the use of `leftJoin()` and `innerJoin()`.
 
-Drizzle a complétement intégré le support des requêtes N+1, vous n'avez pas besoin de vous soucier de la gestion des requêtes supplémentaires.[Voir l'article](https://orm.drizzle.team/benchmarks#how-it-works).
+Drizzle has built-in support to handle N+1 scenarios effectively. [See article](https://orm.drizzle.team/benchmarks#how-it-works).
 
-### Exemple de Code
+### Example
 
-```typescript
+```ts
 import { sql } from "drizzle-orm"
 import { users } from "./tables/users"
 import { posts } from "./tables/posts"
@@ -28,18 +28,18 @@ const query = db
   .leftJoin(posts, sql`${users.id} = ${posts.userId}`)
 ```
 
-#### Avantages
+### Benefits
 
-- Réduction du nombre de requêtes.
-- Amélioration des performances des requêtes complexes.
+* Fewer queries
+* Improved performance for complex queries
 
-## 3. Utilisation des Vues Matérialisées
+## 3. Materialized Views
 
-Les vues matérialisées stockent le résultat pré-calculé des requêtes lourdes pour réduire le temps de calcul et améliorer la performance des requêtes répétées.
+Materialized views store pre-computed query results to reduce computation on repeated calls.
 
-### Exemple de Code
+### Example
 
-```typescript
+```ts
 import { pgMaterializedView, sql } from "drizzle-orm/pg-core"
 import { events } from "./tables/events"
 import { addresses } from "./tables/addresses"
@@ -57,26 +57,25 @@ export const eventSummary = pgMaterializedView("event_summary").as((qb) => {
 })
 ```
 
-Dans vos requête d'ajout, de modification ou de suppression vous allez devoir refresh cette vue matérialisée.
+To refresh:
 
-```typescript
+```ts
 await db.refreshMaterializedView(eventSummary).concurrently()
 ```
 
-#### Avantages
+### Benefits
 
-- Réduction du temps de réponse.
-- Allègement de la charge sur la base de données.
+* Faster response times
+* Reduced database load
 
-## 4. Indexation
+## 4. Indexing
 
-L'indexation est une technique pour améliorer les performances des requêtes en créant des index sur les colonnes fréquemment utilisées dans les requêtes.
+Indexing improves query performance by indexing frequently queried columns.
 
-### Exemple de Code
+### Example
 
-```typescript
+```ts
 import { sql, index, pgTable } from "drizzle-orm"
-import { users } from "./tables/users"
 
 const users = pgTable("users").columns(
   {
@@ -92,22 +91,18 @@ const users = pgTable("users").columns(
 )
 ```
 
-#### Avantages
+### Benefits
 
-- Réduction du temps de réponse des requêtes.
-- Amélioration des performances des requêtes de recherche.
-- Réduction du temps de scan des lignes pour les requêtes ciblées.
+* Faster search and query execution
+* Reduced scan time
 
 ## 5. Pagination
 
-La pagination est une technique pour diviser les résultats de requêtes en pages pour améliorer les performances et la lisibilité des résultats.
+Pagination breaks down results into smaller pages.
 
-### Exemple de Code
+### Example
 
-```typescript
-import { sql } from "drizzle-orm"
-import { users } from "./tables/users"
-
+```ts
 const query = db
   .select({
     user: users.name,
@@ -118,21 +113,18 @@ const query = db
   .offset(0)
 ```
 
-#### Avantages
+### Benefits
 
-- Réduction du temps de réponse des requêtes.
-- Amélioration de la lisibilité des résultats.
+* Improved performance
+* Better UX for large datasets
 
-## 6. Requêtes Préparées avec `.prepare()` et `.execute()`
+## 6. Prepared Queries
 
-Les requêtes préparées sont des requêtes SQL pré-compilées qui améliorent les performances des requêtes répétées en évitant la compilation à chaque exécution.
+Prepared queries improve repeated execution performance by avoiding re-compilation.
 
-### Exemple de Code
+### Example
 
-```typescript
-import { sql } from "drizzle-orm"
-import { users } from "./tables/users"
-
+```ts
 const query = db
   .select({
     user: users.name,
@@ -140,47 +132,39 @@ const query = db
   })
   .prepare("myQueryStatement")
 
-// Execution de la requête préparée
 await query.execute()
 ```
 
-#### Avantages
+### Benefits
 
-- Réduction du temps de réponse des requêtes répétées.
-- Amélioration des performances des requêtes complexes.
-- Réduction de la charge sur la base de données.
+* Lower latency for repeated queries
+* Reduced DB load
 
 ## 7. Transactions
 
-Les transactions sont des groupes de requêtes SQL qui sont exécutées de manière atomique pour garantir la cohérence des données.
+Transactions ensure multiple queries are executed atomically.
 
-### Exemple de Code
+### Example
 
-```typescript
-import { sql } from "drizzle-orm"
-import { users } from "./tables/users"
-
+```ts
 const insertUsers = await db.transaction(async (tx) => {
   await tx.insertInto(users).values({ name: "Alice" })
   await tx.insertInto(users).values({ name: "Bob" })
 })
 ```
 
-#### Avantages
+### Benefits
 
-- Garantie de la cohérence des données.
-- Réduction des conflits de concurrence.
+* Data consistency
+* Concurrency conflict reduction
 
-## 8. Implémentation de Redis pour le Caching
+## 8. Redis Caching
 
-Redis est une base de données en mémoire qui peut être utilisée pour stocker des données en cache pour améliorer les performances des requêtes répétées.
+Redis is an in-memory store used to cache data and reduce DB pressure.
 
-### Exemple de Code
+### Example
 
-```typescript
-import { sql } from "drizzle-orm"
-import { users } from "./tables/users"
-
+```ts
 const cachedQuery = await redis.get("myCachedQuery")
 
 if (!cachedQuery) {
@@ -196,26 +180,25 @@ if (!cachedQuery) {
 }
 ```
 
-#### Avantages
+### Benefits
 
-- Réduction du temps de réponse des requêtes répétées.
-- Réduction de la charge sur la base de données.
+* Faster repeat queries
+* Offload DB from repeated reads
 
-## 9. Petits Trucs en Plus
+## 9. Extra Notes
 
-- Pour le moment Drizzle ne donne pas le moyen de faire du partitionnement de tables, mais vous pouvez toujours utiliser des vues pour simuler ce comportement.
+* Drizzle currently doesn't support native table partitioning. Use views to simulate this behavior.
+* Always create a unique index on materialized views' identifier columns to avoid refresh errors:
 
-- Quand vous créez une vue matérialisée, assurez-vous de générer un index unique sur la colonne d'identifiant pour éviter les erreurs au refresh de la vue. Drizzle ne le fait pas automatiquement.
-
-```typescript
+```bash
 npm run drizzle-kit generate --custom
 ```
 
 ```sql
--- Custom SQL migration file, put your code below! --
+-- In the generated SQL migration
 CREATE UNIQUE INDEX IF NOT EXISTS idx_event_summary_event_id ON event_summary (id);
 ```
 
-```typescript
+```bash
 npm run drizzle-kit migrate
 ```

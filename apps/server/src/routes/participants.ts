@@ -26,10 +26,10 @@ import {
   userNeedToWaitCooldownBeforeParticipating,
 } from "@server/features/participants"
 import { auth } from "@server/middlewares/auth"
+import { redis } from "@server/utils/clients/redis"
 import { tenMinutesTTL } from "@server/utils/helpers/times"
 import { contextKeys } from "@server/utils/keys/contextKeys"
 import { redisKeys } from "@server/utils/keys/redisKeys"
-import { redis } from "@server/utils/redis/instance"
 import { SC } from "@server/utils/status"
 import { Hono } from "hono"
 

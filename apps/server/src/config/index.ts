@@ -50,6 +50,10 @@ const appConfigSchema = z
       password: z.string(),
       db: z.string(),
     }),
+    metrics: z.object({
+      username: z.string(),
+      password: z.string(),
+    }),
   })
   .strict()
 
@@ -97,6 +101,10 @@ const appConfig = appConfigSchema.parse({
     username: process.env.REDIS_USERNAME,
     password: process.env.REDIS_PASSWORD,
     db: process.env.REDIS_DB,
+  },
+  metrics: {
+    username: process.env.METRICS_USERNAME,
+    password: process.env.METRICS_PASSWORD,
   },
 })
 

@@ -5,4 +5,5 @@ export const router = {
   events: "/events",
   participants: "/participants",
   reviews: "/reviews",
+  globals: "",
 } as const

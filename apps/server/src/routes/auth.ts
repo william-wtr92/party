@@ -21,13 +21,13 @@ import {
   userNotFound,
 } from "@server/features/users"
 import { auth } from "@server/middlewares/auth"
+import { redis } from "@server/utils/clients/redis"
 import { delCookie, setCookie } from "@server/utils/helpers/cookie"
 import { signJwt } from "@server/utils/helpers/jwt"
 import { comparePassword, hashPassword } from "@server/utils/helpers/password"
 import { contextKeys } from "@server/utils/keys/contextKeys"
 import { cookiesKeys } from "@server/utils/keys/cookiesKeys"
 import { redisKeys } from "@server/utils/keys/redisKeys"
-import { redis } from "@server/utils/redis/instance"
 import { SC } from "@server/utils/status"
 import { Hono } from "hono"
 

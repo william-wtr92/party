@@ -4,6 +4,7 @@ import {
   existByEmail,
   userNotFound,
 } from "@server/features/users"
+import { redis } from "@server/utils/clients/redis"
 import { jwtTokenErrors } from "@server/utils/errors/jwtErrors"
 import { getCookie } from "@server/utils/helpers/cookie"
 import { decodeJwt } from "@server/utils/helpers/jwt"
@@ -11,7 +12,6 @@ import { oneDayTTL } from "@server/utils/helpers/times"
 import { contextKeys } from "@server/utils/keys/contextKeys"
 import { cookiesKeys } from "@server/utils/keys/cookiesKeys"
 import { redisKeys } from "@server/utils/keys/redisKeys"
-import { redis } from "@server/utils/redis/instance"
 import { sanitizeUser } from "@server/utils/sanitizers/usersSanitizers"
 import { SC } from "@server/utils/status"
 import type { MiddlewareHandler } from "hono"
