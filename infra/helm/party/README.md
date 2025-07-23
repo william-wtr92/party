@@ -141,3 +141,8 @@ helm upgrade party-app . \
 - `kubectl get secret party-secrets -n party` → should exist
 - Argo CD UI accessible (via port-forward or Ingress)
 - Ingress correctly exposes the app (according to `.Values.ingress.host`)
+
+## 📝 Screenshots
+
+> 🦑 Argo CD UI
+![Argo CD UI](../../../docs/argo.png)
