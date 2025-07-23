@@ -43,7 +43,13 @@ terraform apply
 Export the service account key:
 
 ```bash
-terraform output -raw eso_reader_key > eso-creds.json
+terraform output -raw eso_reader_key > eso-creds.json 
+```
+
+Decode the key to view its contents:
+
+```bash
+cat eso-creds.json | base64 --decode | jq .
 ```
 
 ### 2️⃣ External Secrets Operator (ESO)
