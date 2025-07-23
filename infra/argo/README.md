@@ -36,11 +36,59 @@ kubectl -n argocd get secret argocd-initial-admin-secret \
 
 > ⚠️ This secret is deleted automatically if you change the admin password.
 
+## 🔐 Add GitHub Credentials (for Private Repositories)
+
+### 4. Prepare a GitHub Access Token (PAT)
+
+- Go to [GitHub Personal Access Tokens](https://github.com/settings/tokens).
+- Click **Generate new token (classic)**.
+- Minimum required scope: `repo` ✅ (full control is not needed).
+- Name it **ArgoCD Access** and copy the token.
+
+### 5. Create the Kubernetes Secret for GitHub Access
+
+- Copy the example file:
+
+  ```bash
+  cp infra/secrets/github-repo-secret.example.yaml infra/secrets/github-repo-secret.yaml
+  ```
+
+- Edit `infra/secrets/github-repo-secret.yaml` to match your repo and credentials:
+
+  ```yaml
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: github-repo-secret
+    namespace: argocd
+    labels:
+      argocd.argoproj.io/secret-type: repository
+  type: Opaque
+  stringData:
+    url: https://github.com/your-username/your-repo
+    username: your-username
+    password: your-personal-access-token
+  ```
+
+- Apply the secret:
+
+  ```bash
+  kubectl apply -f infra/secrets/github-repo-secret.yaml
+  ```
+
+> 💡 This secret is not versioned. Ensure `infra/secrets/github-repo-secret.yaml` is listed in `.gitignore`.
+
+**Optional but recommended:** Restart the Argo CD repo server to reload credentials.
+
+```bash
+kubectl rollout restart deployment argocd-repo-server -n argocd
+```
+
 ## 🔧 Application Setup
 
 Once your `infra/helm/party` chart is pushed to a GitHub repository:
 
-### 4. Deploy the Application via Argo CD
+### 6. Deploy the Application via Argo CD
 
 ```bash
 kubectl apply -f infra/argo/application.yaml -n argocd
