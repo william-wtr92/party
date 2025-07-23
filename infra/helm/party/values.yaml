@@ -18,9 +18,15 @@ postgresql:
       storageClass: standard-rwo
       size: 8Gi
 
+eso:
+  credentialsSecretNamespace: external-secrets
+
 ingress:
   enabled: true
   host: party.35.241.144.207.nip.io # Replace with your actual domain or IP
+
+debug:
+  enableManualSecrets: false
 
 env:
   NEXT_PUBLIC_API_URL: https://party.35.241.144.207.nip.io/api
