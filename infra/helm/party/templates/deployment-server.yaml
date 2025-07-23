@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: party-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: party-server
+  template:
+    metadata:
+      labels:
+        app: party-server
+    spec:
+      imagePullSecrets:
+        - name: ghcr-credentials
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until nc -z party-app-postgresql 5432; do echo waiting for postgres...; sleep 2; done"
+            ]
+      containers:
+        - name: server
+          image: {{ .Values.server.image }}
+          ports:
+            - containerPort: {{ .Values.server.port }}
+          envFrom:
+            - configMapRef:
+                name: party-config
+            - secretRef:
+                name: party-secrets

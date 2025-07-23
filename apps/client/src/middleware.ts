@@ -8,6 +8,10 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL
 export const middleware = async (request: NextRequest) => {
   const authToken = request.cookies.get(authTokenName)?.value
 
+  // PROD: Log the auth token for debugging purposes
+  // eslint-disable-next-line no-console
+  console.info("Auth Token:", authToken)
+
   if (!authToken) {
     return NextResponse.redirect(new URL(routes.test, request.nextUrl))
   }

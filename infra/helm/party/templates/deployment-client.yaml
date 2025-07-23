@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: party-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: party-client
+  template:
+    metadata:
+      labels:
+        app: party-client
+    spec:
+      imagePullSecrets:
+        - name: ghcr-credentials
+      containers:
+        - name: client
+          image: {{ .Values.client.image }}
+          ports:
+            - containerPort: {{ .Values.client.port }}
+          env:
+            - name: PORT
+              value: "{{ .Values.client.port }}"
+          envFrom:
+            - configMapRef:
+                name: party-config
+            - secretRef:
+                name: party-secrets

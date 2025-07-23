@@ -1,0 +1,38 @@
+projectID: party-466709
+namespace: party
+
+client:
+  image: ghcr.io/william-wtr92/party-client:latest
+  port: 3002
+server:
+  image: ghcr.io/william-wtr92/party-server:latest
+  port: 3001
+
+postgresql:
+  auth:
+    username: postgres
+    database: party
+  primary:
+    persistence:
+      enabled: true
+      storageClass: standard-rwo
+      size: 8Gi
+
+ingress:
+  enabled: true
+  host: party.35.241.144.207.nip.io # Replace with your actual domain or IP
+
+env:
+  NEXT_PUBLIC_API_URL: https://party.35.241.144.207.nip.io/api
+  SERVER_PORT: "3001"
+  CLIENT_PORT: "3002"
+  CORS_ORIGIN: https://party.35.241.144.207.nip.io
+  DB_HOST: party-app-postgresql
+  DB_PORT: "5432"
+  DB_USER: postgres
+  DB_NAME: party
+  REDIS_HOST: party-app-redis-master
+  REDIS_PORT: "6379"
+  REDIS_USERNAME: default
+  REDIS_DB: "1"
+  METRICS_USERNAME: admin
