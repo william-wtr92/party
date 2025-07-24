@@ -1,0 +1,8 @@
+helm:
+  parameters:
+  - name: image.name
+    value: ghcr.io/william-wtr92/party-client
+    forcestring: true
+  - name: image.tag
+    value: latest@sha256:ee87eed7ebd12e12cddcf17888cab0ed3182e2fb73fc21a0a6f0dcfcc75a0ff0
+    forcestring: true
