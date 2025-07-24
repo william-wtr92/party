@@ -50,13 +50,16 @@ const appRouter = app
   .route(router.reviews, routes.reviews)
   .route(router.globals, routes.globals)
 
-serve({
-  fetch: app.fetch,
-  port: appConfig.port,
-})
-
-//eslint-disable-next-line no-console
-console.info(`🚀 Party Server is running on port ${appConfig.port}`)
+serve(
+  {
+    fetch: app.fetch,
+    port: appConfig.port,
+  },
+  (info) => {
+    //eslint-disable-next-line no-console
+    console.info(`🚀 Party Serv is running on port ${info.port}`)
+  }
+)
 
 export default app
 export type AppType = typeof appRouter
