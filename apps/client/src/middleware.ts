@@ -16,7 +16,7 @@ export const middleware = async (request: NextRequest) => {
     return NextResponse.redirect(new URL(routes.test, request.nextUrl))
   }
 
-  console.log("URL API :" + apiUrl + apiRoutes.users.me)
+  console.log("URL fetched :" + apiUrl + apiRoutes.users.me)
 
   try {
     const authResponse = await fetch(apiUrl + apiRoutes.users.me, {
