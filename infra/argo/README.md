@@ -99,12 +99,18 @@ kubectl rollout restart deployment argocd-repo-server -n argocd
 
 ---
 
+## 📦 Image Requirements
+
+- ✅ Docker images must be **public** on GHCR (`ghcr.io`)
+- ⛔ Argo CD Image Updater does **not** support private GHCR authentication via personal access token for write-back (due to GitHub Actions limitations on PAT + read tokens).
+
+---
+
 ## 🔁 Install Argo CD Image Updater
 
 ```bash
 helm upgrade --install argocd-image-updater argo/argocd-image-updater \
   --namespace argocd \
-  --create-namespace \
   --set config.argoCD.namespace=argocd \
   --set config.logLevel=info \
   --set config.git.writeBackMethod=git:secret \
@@ -114,11 +120,9 @@ helm upgrade --install argocd-image-updater argo/argocd-image-updater \
 
 ---
 
-## 🔧 Application Setup
+## 🔧 Argo CD Application with Annotations
 
-### 6. Define Argo CD Application with Image Update Annotations
-
-Create or edit `infra/argo/application.yaml`:
+File: `infra/argo/application.yaml`
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -127,11 +131,11 @@ metadata:
   name: party-app
   namespace: argocd
   annotations:
-    argocd-image-updater.argoproj.io/image-list: |
-      server=ghcr.io/william-wtr92/party-server
-      client=ghcr.io/william-wtr92/party-client
-    argocd-image-updater.argoproj.io/client.update-strategy: latestDigest
+    argocd-image-updater.argoproj.io/image-list: "server,client"
+    argocd-image-updater.argoproj.io/server.image-name: ghcr.io/william-wtr92/party-server
     argocd-image-updater.argoproj.io/server.update-strategy: latestDigest
+    argocd-image-updater.argoproj.io/client.image-name: ghcr.io/william-wtr92/party-client
+    argocd-image-updater.argoproj.io/client.update-strategy: latestDigest
     argocd-image-updater.argoproj.io/write-back-method: git:secret
     argocd-image-updater.argoproj.io/git-branch: main
 spec:
@@ -152,7 +156,7 @@ spec:
       selfHeal: true
 ```
 
-Apply it:
+Apply the application:
 
 ```bash
 kubectl apply -f infra/argo/application.yaml
@@ -160,51 +164,54 @@ kubectl apply -f infra/argo/application.yaml
 
 ---
 
-## 🚀 Workflow After Pushing to Main
+## ⚠️ Prevent Infinite CI/CD Loops
 
-- **CI:** Push image to GHCR on push to main (handled by your GitHub Actions workflow).
-- **CD:** Argo Image Updater triggers automatically:
-  - Detects the new image pushed to ghcr.io
-  - Edits `values.yaml` in Git
-  - Commits and pushes the change
-  - Argo CD picks it up and syncs automatically
+In your GitHub Actions workflow (build + push image), add:
 
-To trigger manually:
-
-```bash
-kubectl delete pod -l app.kubernetes.io/name=argocd-image-updater -n argocd
+```yaml
+if: github.actor != 'argocd-image-updater'
 ```
+
+This prevents Argo CD Image Updater from triggering CI via its own push, avoiding infinite loops.
 
 ---
 
-## ✅ Verification
+## ✅ Required Format in `values.yaml`
 
-To confirm it works:
-
-```bash
-kubectl logs -n argocd deploy/argocd-image-updater
-```
-
-Look for logs like:
-
-```
-INFO [party-app] Found 1 image update(s)
-INFO [party-app] Writing back updated values.yaml to Git
-```
-
----
-
-## 📌 Notes
-
-- **Don’t commit sensitive tokens (like PATs) to Git.**
-- Use `.gitignore` for your `*.secret.yaml` files.
-- Ensure your `values.yaml` contains:
+Ensure `infra/helm/party/values.yaml` contains image paths **without explicit tags**, for example:
 
 ```yaml
 server:
-  image: ghcr.io/your-username/party-server
+  image: ghcr.io/william-wtr92/party-server
   tag: latest
+
 client:
-  image: ghcr.io/your-username/party-client
+  image: ghcr.io/william-wtr92/party-client
   tag: latest
+```
+
+---
+
+## 🔍 Monitoring Updates
+
+To follow updates:
+
+```bash
+kubectl logs -n argocd deploy/argocd-image-updater -f
+```
+
+You should see logs like:
+
+```
+Successfully updated image ...
+Committing ... to Git
+Successfully updated the live application spec
+```
+
+---
+
+## ♻️ Force an Update Cycle Manually
+
+```bash
+kubectl delete pod -l app.kubernetes.io/name=argocd-image-updater -n argocd
 ```
