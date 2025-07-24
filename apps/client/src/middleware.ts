@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { NextResponse, type NextRequest } from "next/server"
 
 import { apiRoutes, routes } from "./web/utils/routes"
@@ -8,11 +9,11 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL
 export const middleware = async (request: NextRequest) => {
   const authToken = request.cookies.get(authTokenName)?.value
 
-  // PROD: Log the auth token for debugging purposes
-  // eslint-disable-next-line no-console
   console.info("Auth Token:", authToken)
 
   if (!authToken) {
+    console.info("Auth token not found, redirecting to home page")
+
     return NextResponse.redirect(new URL(routes.test, request.nextUrl))
   }
 
@@ -26,7 +27,11 @@ export const middleware = async (request: NextRequest) => {
       credentials: "include",
     })
 
+    console.info("Auth Response Status:", authResponse.status)
+
     if (!authResponse.ok) {
+      console.info("Auth response not ok, redirecting to home page")
+
       const redirectResponse = NextResponse.redirect(
         new URL(routes.home, request.url)
       )
@@ -40,6 +45,8 @@ export const middleware = async (request: NextRequest) => {
 
     return NextResponse.next()
   } catch {
+    console.log("Error fetching user data, redirecting to home page")
+
     return NextResponse.redirect(new URL(routes.home, request.url))
   }
 }
