@@ -13,7 +13,6 @@ metadata:
     argocd-image-updater.argoproj.io/client.values: client.image.tag
 
     argocd-image-updater.argoproj.io/write-back-method: git
-    argocd-image-updater.argoproj.io/write-back-target: helm 
     argocd-image-updater.argoproj.io/git-branch: main
     
 spec:

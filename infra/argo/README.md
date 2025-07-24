@@ -131,13 +131,17 @@ metadata:
   name: party-app
   namespace: argocd
   annotations:
-    argocd-image-updater.argoproj.io/image-list: "server,client"
-    argocd-image-updater.argoproj.io/server.image-name: ghcr.io/william-wtr92/party-server
-    argocd-image-updater.argoproj.io/server.update-strategy: latestDigest
-    argocd-image-updater.argoproj.io/client.image-name: ghcr.io/william-wtr92/party-client
-    argocd-image-updater.argoproj.io/client.update-strategy: latestDigest
-    argocd-image-updater.argoproj.io/write-back-method: git:secret
+    argocd-image-updater.argoproj.io/image-list: "server=ghcr.io/william-wtr92/party-server:latest,client=ghcr.io/william-wtr92/party-client:latest"
+
+    argocd-image-updater.argoproj.io/server.update-strategy: digest
+    argocd-image-updater.argoproj.io/server.values: server.image.tag
+
+    argocd-image-updater.argoproj.io/client.update-strategy: digest
+    argocd-image-updater.argoproj.io/client.values: client.image.tag
+
+    argocd-image-updater.argoproj.io/write-back-method: git
     argocd-image-updater.argoproj.io/git-branch: main
+    
 spec:
   project: default
   source:
@@ -154,6 +158,7 @@ spec:
     automated:
       prune: true
       selfHeal: true
+
 ```
 
 Apply the application:
