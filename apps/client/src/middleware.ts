@@ -28,6 +28,8 @@ export const middleware = async (request: NextRequest) => {
       credentials: "include",
     })
 
+    console.log(await authResponse.text())
+
     console.info("Auth Response Status:", authResponse.status)
 
     if (!authResponse.ok) {
@@ -45,8 +47,8 @@ export const middleware = async (request: NextRequest) => {
     }
 
     return NextResponse.next()
-  } catch {
-    console.log("Error fetching user data, redirecting to home page")
+  } catch (e) {
+    console.log("Error fetching user data, redirecting to home page", e)
 
     return NextResponse.redirect(new URL(routes.home, request.url))
   }
