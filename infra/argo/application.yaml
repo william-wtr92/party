@@ -7,7 +7,10 @@ metadata:
     argocd-image-updater.argoproj.io/image-list: "server=ghcr.io/william-wtr92/party-server:latest,client=ghcr.io/william-wtr92/party-client:latest"
 
     argocd-image-updater.argoproj.io/server.update-strategy: digest
+    argocd-image-updater.argoproj.io/server.values: server.image.tag
+
     argocd-image-updater.argoproj.io/client.update-strategy: digest
+    argocd-image-updater.argoproj.io/client.values: client.image.tag
 
     argocd-image-updater.argoproj.io/write-back-method: git
     argocd-image-updater.argoproj.io/git-branch: main
