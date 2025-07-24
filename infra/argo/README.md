@@ -1,6 +1,8 @@
-# 🚀 Argo CD – GitOps Deployment for Party
+# 🚀 Argo CD + Argo CD Image Updater – GitOps Deployment for Party
 
-This guide explains how to set up Argo CD to deploy the Party Helm chart from your GitHub repository using GitOps principles.
+This guide explains how to set up Argo CD to deploy the Party Helm chart from your GitHub repository using GitOps principles, and how to enable automatic image updates using Argo CD Image Updater.
+
+---
 
 ## 📦 Installation
 
@@ -16,13 +18,16 @@ helm install argocd argo/argo-cd \
   --set installCRDs=true
 ```
 
-### 2. Forward Port to Access UI (optional for local use)
+---
+
+### 2. Forward Port to Access UI (Optional for Local Use)
 
 ```bash
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 ```
+Then open: [https://localhost:8080](https://localhost:8080)
 
-Open [https://localhost:8080](https://localhost:8080) in your browser.
+---
 
 ### 3. Retrieve Initial Admin Password
 
@@ -30,71 +35,89 @@ Open [https://localhost:8080](https://localhost:8080) in your browser.
 kubectl -n argocd get secret argocd-initial-admin-secret \
   -o jsonpath="{.data.password}" | base64 -d && echo
 ```
-
 - **Username:** `admin`
 - **Password:** (output above)
 
-> ⚠️ This secret is deleted automatically if you change the admin password.
+---
 
-## 🔐 Add GitHub Credentials (for Private Repositories)
+## 🔐 GitHub Credentials for Argo CD and Image Updater
 
-### 4. Prepare a GitHub Access Token (PAT)
+### 4. Create GitHub Access Token
 
-- Go to [GitHub Personal Access Tokens](https://github.com/settings/tokens).
-- Click **Generate new token (classic)**.
-- Minimum required scope: `repo` ✅ (full control is not needed).
-- Name it **ArgoCD Access** and copy the token.
+- Generate a [Personal Access Token (classic)](https://github.com/settings/tokens)
+- **Minimum scope:** `repo`
+- Save the token securely.
 
-### 5. Create the Kubernetes Secret for GitHub Access
+---
 
-- Copy the example file:
+### 5. Create GitHub Secrets
 
-  ```bash
-  cp infra/secrets/github-repo-secret.example.yaml infra/secrets/github-repo-secret.yaml
-  ```
+Create a combined file at `infra/secrets/github-secrets.yaml`:
 
-- Edit `infra/secrets/github-repo-secret.yaml` to match your repo and credentials:
+```yaml
+# Argo CD access to private Git repo
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-repo-secret
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+type: Opaque
+stringData:
+  url: https://github.com/your-username/your-repo
+  username: your-username
+  password: your-github-pat
+---
+# Argo CD Image Updater write-back credentials
+apiVersion: v1
+kind: Secret
+metadata:
+  name: image-updater-git-writer
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repo-creds
+type: Opaque
+stringData:
+  url: https://github.com/your-username/your-repo
+  username: your-username
+  password: your-github-pat
+```
 
-  ```yaml
-  apiVersion: v1
-  kind: Secret
-  metadata:
-    name: github-repo-secret
-    namespace: argocd
-    labels:
-      argocd.argoproj.io/secret-type: repository
-  type: Opaque
-  stringData:
-    url: https://github.com/your-username/your-repo
-    username: your-username
-    password: your-personal-access-token
-  ```
+Apply it:
 
-- Apply the secret:
+```bash
+kubectl apply -f infra/secrets/github-secrets.yaml
+```
 
-  ```bash
-  kubectl apply -f infra/secrets/github-repo-secret.yaml
-  ```
-
-> 💡 This secret is not versioned. Ensure `infra/secrets/github-repo-secret.yaml` is listed in `.gitignore`.
-
-**Optional but recommended:** Restart the Argo CD repo server to reload credentials.
+Then restart repo-server to apply access:
 
 ```bash
 kubectl rollout restart deployment argocd-repo-server -n argocd
 ```
 
-## 🔧 Application Setup
+---
 
-Once your `infra/helm/party` chart is pushed to a GitHub repository:
-
-### 6. Deploy the Application via Argo CD
+## 🔁 Install Argo CD Image Updater
 
 ```bash
-kubectl apply -f infra/argo/application.yaml -n argocd
+helm upgrade --install argocd-image-updater argo/argocd-image-updater \
+  --namespace argocd \
+  --create-namespace \
+  --set config.argoCD.namespace=argocd \
+  --set config.logLevel=info \
+  --set config.git.writeBackMethod=git:secret \
+  --set config.git.branch=main \
+  --set image.tag=v0.16.0
 ```
 
-Your `application.yaml` should look like:
+---
+
+## 🔧 Application Setup
+
+### 6. Define Argo CD Application with Image Update Annotations
+
+Create or edit `infra/argo/application.yaml`:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -102,10 +125,18 @@ kind: Application
 metadata:
   name: party-app
   namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: |
+      server=ghcr.io/your-username/party-server
+      client=ghcr.io/your-username/party-client
+    argocd-image-updater.argoproj.io/server.update-strategy: latest
+    argocd-image-updater.argoproj.io/client.update-strategy: latest
+    argocd-image-updater.argoproj.io/write-back-method: git:secret
+    argocd-image-updater.argoproj.io/git-branch: main
 spec:
   project: default
   source:
-    repoURL: git@github.com:your-org/your-repo.git
+    repoURL: https://github.com/your-username/your-repo
     targetRevision: main
     path: infra/helm/party
     helm:
@@ -123,15 +154,59 @@ spec:
       - CreateNamespace=true
 ```
 
-> Replace `repoURL` and `targetRevision` with your actual GitHub repository URL and branch.
+Apply it:
+
+```bash
+kubectl apply -f infra/argo/application.yaml
+```
+
+---
+
+## 🚀 Workflow After Pushing to Main
+
+- **CI:** Push image to GHCR on push to main (handled by your GitHub Actions workflow).
+- **CD:** Argo Image Updater triggers automatically:
+  - Detects the new image pushed to ghcr.io
+  - Edits `values.yaml` in Git
+  - Commits and pushes the change
+  - Argo CD picks it up and syncs automatically
+
+To trigger manually:
+
+```bash
+kubectl delete pod -l app.kubernetes.io/name=argocd-image-updater -n argocd
+```
+
+---
 
 ## ✅ Verification
 
-- The Argo CD UI should show your `party-app` as **Healthy** and **Synced**.
-- Your app is deployed in the `party` namespace.
-- If you use External Secrets, ensure secrets are correctly synced.
+To confirm it works:
 
-## 🔐 Notes
+```bash
+kubectl logs -n argocd deploy/argocd-image-updater
+```
 
-- If your GitHub repository is private, configure an SSH deploy key or HTTPS token access.
-- You may also use Argo CD Git credentials via a Secret (not covered here).
+Look for logs like:
+
+```
+INFO [party-app] Found 1 image update(s)
+INFO [party-app] Writing back updated values.yaml to Git
+```
+
+---
+
+## 📌 Notes
+
+- **Don’t commit sensitive tokens (like PATs) to Git.**
+- Use `.gitignore` for your `*.secret.yaml` files.
+- Ensure your `values.yaml` contains:
+
+```yaml
+server:
+  image: ghcr.io/your-username/party-server
+  tag: latest
+client:
+  image: ghcr.io/your-username/party-client
+  tag: latest
+```
