@@ -94,6 +94,9 @@ jobs:
 
       - name: 💡 Install Helm
         uses: azure/setup-helm@v3
+
+      - name: ➕ Add Bitnami repo
+        run: helm repo add bitnami https://charts.bitnami.com/bitnami
     
       - name: 🔧 Build Helm dependencies
         run: helm dependency build infra/helm/party
