@@ -5,12 +5,14 @@ server:
   image:
     repository: ghcr.io/william-wtr92/party-server
     tag: latest
+    digest: ""
   port: 3001
 
 client:
   image:
     repository: ghcr.io/william-wtr92/party-client
     tag: latest
+    digest: ""
   port: 3002
 
 
