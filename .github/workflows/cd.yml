@@ -94,6 +94,9 @@ jobs:
 
       - name: 💡 Install Helm
         uses: azure/setup-helm@v3
+    
+      - name: 🔧 Build Helm dependencies
+        run: helm dependency build infra/helm/party
 
       - name: 🚀 Deploy with Helm
         run: |
