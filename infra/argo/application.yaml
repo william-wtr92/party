@@ -4,6 +4,7 @@ metadata:
   name: party-app
   namespace: argocd
   annotations:
+    argocd-image-updater.argoproj.io/image-list: server,client
     argocd-image-updater.argoproj.io/server.image-name: ghcr.io/william-wtr92/party-server
     argocd-image-updater.argoproj.io/client.image-name: ghcr.io/william-wtr92/party-client
     argocd-image-updater.argoproj.io/client.update-strategy: latestDigest
