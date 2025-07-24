@@ -103,7 +103,7 @@ jobs:
 
       - name: 🚀 Deploy with Helm
         run: |
-          helm upgrade --install party \
+          helm upgrade --install party-app \
             infra/helm/party \
             --namespace party \
             --create-namespace \
