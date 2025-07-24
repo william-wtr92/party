@@ -4,5 +4,5 @@ helm:
     value: ghcr.io/william-wtr92/party-client
     forcestring: true
   - name: image.tag
-    value: latest@sha256:c0292ddea1af2d693067a1f1165ae87756f270b1c8f1d857d2bb8b1b871b3ebe
+    value: latest@sha256:586d76b3abf5b176120b82ae4a08d6a7cb0f26a5812f736b051e7d2556458155
     forcestring: true
