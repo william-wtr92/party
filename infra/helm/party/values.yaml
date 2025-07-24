@@ -2,10 +2,12 @@ projectID: party-466709
 namespace: party
 
 client:
-  image: ghcr.io/william-wtr92/party-client:latest
+  image: ghcr.io/william-wtr92/party-client
+  tag: latest
   port: 3002
 server:
-  image: ghcr.io/william-wtr92/party-server:latest
+  image: ghcr.io/william-wtr92/party-server
+  tag: latest
   port: 3001
 
 postgresql:
