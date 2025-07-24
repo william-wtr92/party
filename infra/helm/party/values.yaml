@@ -5,14 +5,14 @@ server:
   image:
     repository: ghcr.io/william-wtr92/party-server
     tag: latest
-    digest: ""
+    digest: "sha256:6e45a89d730bfd61fdb05868c15e9f61282b9633849e78054b9f5a57f345dee1"
   port: 3001
 
 client:
   image:
     repository: ghcr.io/william-wtr92/party-client
     tag: latest
-    digest: ""
+    digest: "sha256:77f13a245f3b5c59404de1c228f6bda66941b097fcfdf37211ce465209dd267e"
   port: 3002
 
 
