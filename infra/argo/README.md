@@ -87,7 +87,8 @@ stringData:
 Apply it:
 
 ```bash
-kubectl apply -f infra/secrets/github-secrets.yaml
+cp infra/argo/github-secrets.example.yaml infra/argo/github-secrets.yaml
+kubectl apply -f infra/argo/github-secrets.yaml -n argocd
 ```
 
 Then restart repo-server to apply access:
@@ -127,22 +128,21 @@ metadata:
   namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: |
-      server=ghcr.io/your-username/party-server
-      client=ghcr.io/your-username/party-client
-    argocd-image-updater.argoproj.io/server.update-strategy: latest
-    argocd-image-updater.argoproj.io/client.update-strategy: latest
+      server=ghcr.io/william-wtr92/party-server
+      client=ghcr.io/william-wtr92/party-client
+    argocd-image-updater.argoproj.io/client.update-strategy: latestDigest
+    argocd-image-updater.argoproj.io/server.update-strategy: latestDigest
     argocd-image-updater.argoproj.io/write-back-method: git:secret
     argocd-image-updater.argoproj.io/git-branch: main
 spec:
   project: default
   source:
-    repoURL: https://github.com/your-username/your-repo
+    repoURL: https://github.com/william-wtr92/party
     targetRevision: main
     path: infra/helm/party
     helm:
       valueFiles:
         - values.yaml
-        - values.secret.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: party
@@ -150,8 +150,6 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
 ```
 
 Apply it:

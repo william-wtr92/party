@@ -8,7 +8,6 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
 export const middleware = async (request: NextRequest) => {
   const authToken = request.cookies.get(authTokenName)?.value
-
   console.info("Auth Token Info:", authToken)
 
   if (!authToken) {
