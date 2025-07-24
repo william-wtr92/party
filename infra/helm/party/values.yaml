@@ -1,8 +1,55 @@
-helm:
-  parameters:
-  - name: image.name
-    value: ghcr.io/william-wtr92/party-client
-    forcestring: true
-  - name: image.tag
-    value: latest@sha256:c0292ddea1af2d693067a1f1165ae87756f270b1c8f1d857d2bb8b1b871b3ebe
-    forcestring: true
+projectID: party-466709
+namespace: party
+
+server:
+  image:
+    repository: ghcr.io/william-wtr92/party-server
+    tag: latest
+  port: 3001
+
+client:
+  image:
+    repository: ghcr.io/william-wtr92/party-client
+    tag: latest
+  port: 3002
+
+postgresql:
+  auth:
+    username: postgres
+    database: party
+  primary:
+    persistence:
+      enabled: true
+      storageClass: standard-rwo
+      size: 8Gi
+
+redis:
+  auth:
+    enabled: true
+    existingSecret: party-app-redis
+    existingSecretPasswordKey: redis-password
+
+eso:
+  credentialsSecretNamespace: external-secrets
+
+ingress:
+  enabled: true
+  host: party.35.241.144.207.nip.io # Replace with your actual domain or IP
+
+env:
+  NEXT_PUBLIC_API_URL: https://party.35.241.144.207.nip.io/api
+  SERVER_PORT: "3001"
+  CLIENT_PORT: "3002"
+  CORS_ORIGIN: https://party.35.241.144.207.nip.io
+  DB_HOST: party-app-postgresql
+  DB_PORT: "5432"
+  DB_USER: postgres
+  DB_NAME: party
+  REDIS_HOST: party-app-redis-master
+  REDIS_PORT: "6379"
+  REDIS_USERNAME: default
+  REDIS_DB: "1"
+  METRICS_USERNAME: admin
+
+debug:
+  enableManualSecrets: false
