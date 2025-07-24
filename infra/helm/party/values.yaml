@@ -1,16 +1,20 @@
 projectID: party-466709
 namespace: party
 
-client:
-  image: ghcr.io/william-wtr92/party-client
-  tag: latest
-  digest: ""
-  port: 3002
 server:
-  image: ghcr.io/william-wtr92/party-server
-  tag: latest
-  digest: ""
+  image:
+    repository: ghcr.io/william-wtr92/party-server
+    tag: latest
+    digest: ""
   port: 3001
+
+client:
+  image:
+    repository: ghcr.io/william-wtr92/party-client
+    tag: latest
+    digest: ""
+  port: 3002
+
 
 postgresql:
   auth:
