@@ -97,28 +97,6 @@ Then restart repo-server to apply access:
 kubectl rollout restart deployment argocd-repo-server -n argocd
 ```
 
----
-
-## 📦 Image Requirements
-
-- ✅ Docker images must be **public** on GHCR (`ghcr.io`)
-- ⛔ Argo CD Image Updater does **not** support private GHCR authentication via personal access token for write-back (due to GitHub Actions limitations on PAT + read tokens).
-
----
-
-## 🔁 Install Argo CD Image Updater
-
-```bash
-helm upgrade --install argocd-image-updater argo/argocd-image-updater \
-  --namespace argocd \
-  --set config.argoCD.namespace=argocd \
-  --set config.logLevel=info \
-  --set config.git.writeBackMethod=git:secret \
-  --set config.git.branch=main \
-  --set image.tag=v0.16.0
-```
-
----
 
 ## 🔧 Argo CD Application with Annotations
 
@@ -129,19 +107,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: party-app
-  namespace: argocd
-  annotations:
-    argocd-image-updater.argoproj.io/image-list: "server=ghcr.io/william-wtr92/party-server:latest,client=ghcr.io/william-wtr92/party-client:latest"
-
-    argocd-image-updater.argoproj.io/server.update-strategy: digest
-    argocd-image-updater.argoproj.io/server.values: server.image.tag
-
-    argocd-image-updater.argoproj.io/client.update-strategy: digest
-    argocd-image-updater.argoproj.io/client.values: client.image.tag
-
-    argocd-image-updater.argoproj.io/write-back-method: git
-    argocd-image-updater.argoproj.io/git-branch: main
-    
+  namespace: argocd    
 spec:
   project: default
   source:
@@ -165,52 +131,6 @@ Apply the application:
 
 ```bash
 kubectl apply -f infra/argo/application.yaml
-```
-
----
-
-## ⚠️ Prevent Infinite CI/CD Loops
-
-In your GitHub Actions workflow (build + push image), add:
-
-```yaml
-if: github.actor != 'argocd-image-updater'
-```
-
-This prevents Argo CD Image Updater from triggering CI via its own push, avoiding infinite loops.
-
----
-
-## ✅ Required Format in `values.yaml`
-
-Ensure `infra/helm/party/values.yaml` contains image paths **without explicit tags**, for example:
-
-```yaml
-server:
-  image: ghcr.io/william-wtr92/party-server
-  tag: latest
-
-client:
-  image: ghcr.io/william-wtr92/party-client
-  tag: latest
-```
-
----
-
-## 🔍 Monitoring Updates
-
-To follow updates:
-
-```bash
-kubectl logs -n argocd deploy/argocd-image-updater -f
-```
-
-You should see logs like:
-
-```
-Successfully updated image ...
-Committing ... to Git
-Successfully updated the live application spec
 ```
 
 ---

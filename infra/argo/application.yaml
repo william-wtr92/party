@@ -3,18 +3,6 @@ kind: Application
 metadata:
   name: party-app
   namespace: argocd
-  annotations:
-    argocd-image-updater.argoproj.io/image-list: "server=ghcr.io/william-wtr92/party-server,client=ghcr.io/william-wtr92/party-client"
-
-    argocd-image-updater.argoproj.io/server.update-strategy: newest-build
-    argocd-image-updater.argoproj.io/server.values: server.image.tag
-
-    argocd-image-updater.argoproj.io/client.update-strategy: newest-build
-    argocd-image-updater.argoproj.io/client.values: client.image.tag
-
-    argocd-image-updater.argoproj.io/write-back-method: git
-    argocd-image-updater.argoproj.io/git-branch: main
-    
 spec:
   project: default
   source:
@@ -22,6 +10,7 @@ spec:
     targetRevision: main
     path: infra/helm/party
     helm:
+      releaseName: party 
       valueFiles:
         - values.yaml
   destination:

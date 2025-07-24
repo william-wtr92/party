@@ -26,6 +26,7 @@ spec:
       containers:
         - name: server
           image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}"
+          imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.server.port }}
           envFrom:
