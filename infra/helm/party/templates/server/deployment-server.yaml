@@ -25,7 +25,7 @@ spec:
             ]
       containers:
         - name: server
-          image: "{{ .Values.server.image.repository }}@{{ .Values.server.image.digest }}"
+          image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}"
           ports:
             - containerPort: {{ .Values.server.port }}
           envFrom:

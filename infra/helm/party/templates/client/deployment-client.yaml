@@ -16,7 +16,7 @@ spec:
         - name: ghcr-credentials
       containers:
         - name: client
-          image: "{{ .Values.client.image.repository }}@{{ .Values.client.image.digest }}"
+          image: "{{ .Values.client.image.repository }}:{{ .Values.client.image.tag }}"
           ports:
             - containerPort: {{ .Values.client.port }}
           env:
