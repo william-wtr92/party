@@ -30,7 +30,6 @@ redis:
     existingSecretPasswordKey: redis-password
 
 eso:
-  createClusterSecretStore: false
   credentialsSecretNamespace: external-secrets
 
 ingress:
