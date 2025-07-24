@@ -56,7 +56,7 @@ serve({
 })
 
 //eslint-disable-next-line no-console
-console.info(`🚀 Server running on port ${appConfig.port}`)
+console.info(`🚀 Party Server is running on port ${appConfig.port}`)
 
 export default app
 export type AppType = typeof appRouter
