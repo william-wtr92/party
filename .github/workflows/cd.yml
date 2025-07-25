@@ -76,15 +76,14 @@ jobs:
       - name: 🕵️ Get digest of server image
         id: server-digest
         run: |
-          DIGEST=$(docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-server:${{ github.sha }} --format '{{json .Digest}}' | tr -d '"')
+          DIGEST=$(docker buildx imagetools inspect ghcr.io/${{ env.IMAGE_NAME }}-server:${{ github.sha }} --raw | jq -r '.manifest.digest')
           echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
 
       - name: 🕵️ Get digest of client image
         id: client-digest
         run: |
-          DIGEST=$(docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-client:${{ github.sha }} --format '{{json .Digest}}' | tr -d '"')
+          DIGEST=$(docker buildx imagetools inspect ghcr.io/${{ env.IMAGE_NAME }}-client:${{ github.sha }} --raw | jq -r '.manifest.digest')
           echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
-
 
   deploy:
     name: 🚀 Deploy to GKE via Helm
