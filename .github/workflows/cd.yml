@@ -76,14 +76,19 @@ jobs:
       - name: 🕵️ Get digest of server image
         id: server-digest
         run: |
-          DIGEST=$(docker buildx imagetools inspect ghcr.io/${{ env.IMAGE_NAME }}-server:${{ github.sha }} --raw | jq -r '.manifest.digest')
+          DIGEST=$(docker buildx imagetools inspect ghcr.io/${{ env.IMAGE_NAME }}-server:${{ github.sha }} --format '{{json .Digest}}' | tr -d '"')
           echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
 
       - name: 🕵️ Get digest of client image
         id: client-digest
         run: |
-          DIGEST=$(docker buildx imagetools inspect ghcr.io/${{ env.IMAGE_NAME }}-client:${{ github.sha }} --raw | jq -r '.manifest.digest')
+          DIGEST=$(docker buildx imagetools inspect ghcr.io/${{ env.IMAGE_NAME }}-client:${{ github.sha }} --format '{{json .Digest}}' | tr -d '"')
           echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
+
+      - name: 🔎 Debug output
+        run: |
+          echo "Server digest: ${{ steps.server-digest.outputs.digest }}"
+          echo "Client digest: ${{ steps.client-digest.outputs.digest }}"
 
   deploy:
     name: 🚀 Deploy to GKE via Helm
@@ -122,6 +127,9 @@ jobs:
             infra/helm/party \
             --namespace party \
             --create-namespace \
-            --set server.image.digest=${{ needs.build-and-push.outputs.server_digest }} \
-            --set client.image.digest=${{ needs.build-and-push.outputs.client_digest }}
+            --set client.image.digest="${{ needs.build-and-push.outputs.client_digest }}" \
+            --set client.image.tag="${{ github.sha }}" \
+            --set server.image.digest="${{ needs.build-and-push.outputs.server_digest }}" \
+            --set server.image.tag="${{ github.sha }}"
+
 
