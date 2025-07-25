@@ -11,6 +11,8 @@ spec:
     metadata:
       labels:
         app: party-server
+      annotations:
+        redeploy-hash: "{{ .Values.server.image.tag }}"
     spec:
       imagePullSecrets:
         - name: ghcr-credentials
@@ -25,12 +27,7 @@ spec:
             ]
       containers:
         - name: server
-          image:  >-
-            {{- if .Values.server.image.digest }}
-              {{ .Values.server.image.repository }}@{{ .Values.server.image.digest }}
-            {{- else }}
-              {{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}
-            {{- end }}
+          image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}"
           imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.server.port }}
