@@ -110,6 +110,6 @@ jobs:
             --reuse-values \
             --set client.image.tag="${{ github.sha }}" \
             --set server.image.tag="${{ github.sha }}" \
-            --set-string rolloutTimestamp=$(date +%s)
+            --set rolloutTimestamp="$(date +%s)"
 
 
