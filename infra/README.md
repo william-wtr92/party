@@ -9,25 +9,6 @@
 
 ---
 
-## 0️⃣ Install Cert-Manager (Manual Step)
-
-Install the CRDs and components for cert-manager:
-
-```bash
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml
-```
-
-Apply the global Let's Encrypt ClusterIssuer:
-
-```bash
-kubectl apply -f infra/k8s/cert-manager/cluster-issuer.yaml
-```
-
-> ⚠️ cert-manager is not managed by Helm to avoid ownership conflicts with CRDs and ClusterIssuer.  
-> This issuer is used to generate TLS certificates via Let's Encrypt using the nginx ingress class.
-
----
-
 ## 1️⃣ Provision GCP Infrastructure
 
 ```bash
@@ -134,19 +115,6 @@ kubectl get externalsecret -n party
 
 # Synced secrets
 kubectl get secret party-secrets -n party
-```
-
----
-
-### Check cert-manager
-
-```bash
-kubectl get clusterissuer
-kubectl describe clusterissuer letsencrypt-prod
-
-# Once an ingress with TLS is deployed:
-kubectl get certificate -n party
-kubectl describe certificate -n party
 ```
 
 ---

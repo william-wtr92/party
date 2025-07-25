@@ -5,19 +5,9 @@ metadata:
   name: party-client
   namespace: {{ .Release.Namespace }}
   annotations:
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-{{- if and .Values.ingress.tls.enabled .Values.ingress.tls.issuer }}
-    cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.issuer }}
-{{- end }}
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   ingressClassName: nginx
-{{- if .Values.ingress.tls.enabled }}
-  tls:
-    - hosts:
-        - {{ .Values.ingress.host }}
-      secretName:  party-client-tls
-{{- end }}
   rules:
     - host: {{ .Values.ingress.host }}
       http:
