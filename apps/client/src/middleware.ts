@@ -28,7 +28,7 @@ export const middleware = async (request: NextRequest) => {
       credentials: "include",
     })
 
-    console.log(await authResponse.text())
+    console.log("auth response :", await authResponse.text())
 
     console.info("Auth Response Status:", authResponse.status)
 

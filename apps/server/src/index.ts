@@ -57,7 +57,7 @@ serve(
   },
   (info) => {
     //eslint-disable-next-line no-console
-    console.info(`🚀 Party Serv is running on port ${info.port}`)
+    console.info(`🚀 Party Server is running on port ${info.port}`)
   }
 )
 

@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches: ["main"]
-    # paths:
-    #   - ".github/workflows/**"
-    #   - "apps/client/**"
-    #   - "apps/server/**"
-    #   - "packages/common/**"
-    #   - "docker/**"
+    paths:
+      - ".github/workflows/**"
+      - "apps/client/**"
+      - "apps/server/**"
+      - "packages/common/**"
+      - "docker/**"
 
 env:
   REGISTRY: ghcr.io
@@ -24,6 +24,9 @@ jobs:
     name: 🛠️ Build and push Docker images
     if: github.actor != 'argocd-image-updater'
     runs-on: ubuntu-latest
+    outputs:
+      server_digest: ${{ steps.server-digest.outputs.digest }}
+      client_digest: ${{ steps.client-digest.outputs.digest }}
 
     permissions:
       contents: read
@@ -70,6 +73,20 @@ jobs:
           build-args: |
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
 
+      - name: 📌 Extract digest for server
+        id: server-digest
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-server
+          tags: ${{ github.sha }}
+
+      - name: 📌 Extract digest for client
+        id: client-digest
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-client
+          tags: ${{ github.sha }}
+
   deploy:
     name: 🚀 Deploy to GKE via Helm
     if: github.ref == 'refs/heads/main'
@@ -107,6 +124,6 @@ jobs:
             infra/helm/party \
             --namespace party \
             --create-namespace \
-            --set server.image.tag=${{ github.sha }} \
-            --set client.image.tag=${{ github.sha }}
+            --set server.image.digest=${{ needs.build-and-push.outputs.server_digest }} \
+            --set client.image.digest=${{ needs.build-and-push.outputs.client_digest }}
 
