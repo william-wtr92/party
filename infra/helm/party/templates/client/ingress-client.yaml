@@ -6,8 +6,17 @@ metadata:
   namespace: {{ .Release.Namespace }}
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+{{- if and .Values.ingress.tls.enabled .Values.ingress.tls.issuer }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.issuer }}
+{{- end }}
 spec:
   ingressClassName: nginx
+{{- if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tls.secretName }}
+{{- end }}
   rules:
     - host: {{ .Values.ingress.host }}
       http:

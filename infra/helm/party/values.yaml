@@ -36,6 +36,11 @@ ingress:
   enabled: true
   host: party.35.241.144.207.nip.io # Replace with your actual domain or IP
 
+  tls:
+    enabled: true
+    secretName: party-tls        # Name of the secret to store TLS certs
+    issuer: letsencrypt-prod   
+
 env:
   NEXT_PUBLIC_API_URL: https://party.35.241.144.207.nip.io/api
   SERVER_PORT: "3001"
