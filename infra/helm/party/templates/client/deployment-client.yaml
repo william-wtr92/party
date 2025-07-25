@@ -13,6 +13,7 @@ spec:
         app: party-client
       annotations:
         redeploy-hash: {{ .Values.client.image.tag | quote }}
+        rollout-timestamp: {{ .Values.rolloutTimestamp | quote }}
     spec:
       imagePullSecrets:
         - name: ghcr-credentials
