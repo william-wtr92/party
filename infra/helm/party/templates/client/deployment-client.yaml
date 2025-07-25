@@ -12,7 +12,7 @@ spec:
       labels:
         app: party-client
       annotations:
-        redeploy-hash: "{{ .Values.client.image.tag }}"
+        redeploy-hash: {{ .Values.client.image.tag | quote }}
     spec:
       imagePullSecrets:
         - name: ghcr-credentials
