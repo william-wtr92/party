@@ -73,19 +73,18 @@ jobs:
           build-args: |
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
 
-      - name: 📌 Extract digest for server
+      - name: 🕵️ Get digest of server image
         id: server-digest
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-server
-          tags: ${{ github.sha }}
+        run: |
+          DIGEST=$(docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-server:${{ github.sha }} --format '{{json .Digest}}' | tr -d '"')
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
 
-      - name: 📌 Extract digest for client
+      - name: 🕵️ Get digest of client image
         id: client-digest
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-client
-          tags: ${{ github.sha }}
+        run: |
+          DIGEST=$(docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-client:${{ github.sha }} --format '{{json .Digest}}' | tr -d '"')
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
+
 
   deploy:
     name: 🚀 Deploy to GKE via Helm

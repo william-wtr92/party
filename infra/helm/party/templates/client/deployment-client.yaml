@@ -16,7 +16,12 @@ spec:
         - name: ghcr-credentials
       containers:
         - name: client
-          image: "{{ .Values.client.image.repository }}@{{ .Values.client.image.digest }}"
+          image: >-
+            {{- if .Values.client.image.digest }}
+              {{ .Values.client.image.repository }}@{{ .Values.client.image.digest }}
+            {{- else }}
+              {{ .Values.client.image.repository }}:{{ .Values.client.image.tag }}
+            {{- end }}
           imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.client.port }}
