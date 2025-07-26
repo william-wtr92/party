@@ -15,8 +15,6 @@ client:
 
 postgresql:
   auth:
-    existingSecret: party-secrets
-    existingSecretPasswordKey: DB_PASSWORD
     username: postgres
     database: party
   primary:
