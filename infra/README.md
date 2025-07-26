@@ -52,6 +52,8 @@ helm repo add argo https://argoproj.github.io/argo-helm
 helm repo add external-secrets https://charts.external-secrets.io
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 ```
 
@@ -76,6 +78,28 @@ helm install external-secrets external-secrets/external-secrets \
 ```
 
 > ESO will use the GCP credentials secret (`eso-gcp-creds`) created earlier.
+
+### c. Prometheus (Monitoring - Base)
+
+```bash
+helm install prometheus prometheus-community/prometheus \
+  -n monitoring --create-namespace
+```
+
+This installs Prometheus with the default configuration, including Kubernetes metrics and node-exporter (already integrated in the chart).
+
+---
+
+### d. Grafana (Dashboards)
+
+```bash
+helm install grafana grafana/grafana \
+  -n monitoring --create-namespace \
+  --set adminPassword=admin \
+  --set service.type=ClusterIP \
+  --set persistence.enabled=true \
+  --set persistence.size=2Gi
+```
 
 ---
 
@@ -116,6 +140,39 @@ kubectl get externalsecret -n party
 # Synced secrets
 kubectl get secret party-secrets -n party
 ```
+
+---
+
+### Check Prometheus
+
+```bash
+kubectl -n monitoring rollout status deploy/prometheus-server
+```
+
+### Check Grafana
+
+```bash
+kubectl -n monitoring rollout status deploy/grafana
+```
+
+### Port-forward the UIs locally
+
+**Prometheus UI**
+
+```bash
+kubectl port-forward svc/prometheus-server -n monitoring 9090:80
+```
+
+→ Access: [http://localhost:9090](http://localhost:9090)
+
+**Grafana UI**
+
+```bash
+kubectl port-forward svc/grafana -n monitoring 3000:80
+```
+
+→ Access: [http://localhost:3000](http://localhost:3000)  
+→ Login: `admin` / `admin`
 
 ---
 
