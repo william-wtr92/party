@@ -13,3 +13,10 @@ module "eso" {
   project_id = var.project_id
   secrets    = var.secrets
 }
+
+## Storage Bucket - GCS
+module "storage" {
+  source          = "./modules/storage"
+  project_id      = var.project_id
+  bucket_location = var.bucket_location
+}

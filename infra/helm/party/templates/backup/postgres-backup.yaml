@@ -1,0 +1,50 @@
+{{- if .Values.backup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-backup
+  namespace: {{ .Release.Namespace }}
+spec:
+  schedule: "{{ .Values.backup.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            iam.gke.io/gcp-service-account: "party-backup@{{ .Values.projectID }}.iam.gserviceaccount.com"
+        spec:
+          serviceAccountName: backup-job
+          containers:
+            - name: pg-backup
+              image: google/cloud-sdk:alpine
+              env:
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: party-secrets
+                      key: DB_PASSWORD
+                - name: PROJECT_ID
+                  value: "{{ .Values.projectID }}"
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  apk add --no-cache postgresql-client
+                  TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+                  FILE=/tmp/backup-\$TIMESTAMP.sql
+                  pg_dump -h party-app-postgresql -U postgres -d party > \$FILE
+                  gsutil cp \$FILE gs://party-app-backups-\$PROJECT_ID/postgres/\$TIMESTAMP.sql
+          restartPolicy: OnFailure
+{{- end }}
+
+---
+
+{{- if .Values.backup.enabled }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: backup-job
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    iam.gke.io/gcp-service-account: "party-backup@{{ .Values.projectID }}.iam.gserviceaccount.com"
+{{- end }}

@@ -38,6 +38,10 @@ ingress:
 
 rolloutTimestamp: "initial"
 
+backup:
+  enabled: true
+  schedule: "0 3 * * *"
+
 env:
   NEXT_PUBLIC_API_URL: https://party.35.241.144.207.nip.io/api
   SERVER_PORT: "3001"

@@ -7,6 +7,10 @@ resource "google_container_cluster" "primary" {
 
   ip_allocation_policy {}
 
+  workload_identity_config {
+    workload_pool = "${var.project_id}.svc.id.goog"
+  }
+
   timeouts {
     create = "30m"
     update = "40m"

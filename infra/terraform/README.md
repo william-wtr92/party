@@ -109,3 +109,13 @@ kubectl create secret generic eso-gcp-creds \
   --from-file=credentials.json=eso-creds.json \
   -n external-secrets
 ```
+
+## Module Storage - GCS Bucket
+
+- Enable Workload Identity on the cluster:
+
+```bash
+gcloud container clusters update <cluster_name> \
+  --zone <zone> \
+  --workload-pool=<project_id>.svc.id.goog
+```
