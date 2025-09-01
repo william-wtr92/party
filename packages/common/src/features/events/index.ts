@@ -11,7 +11,7 @@ const eventSchema = z.object({
   startDate: z.string(),
   endDate: z.string(),
   slots: z.string(),
-  remainingSlots: z.number(),
+  remainingSlots: z.string(),
   free: z.boolean(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),

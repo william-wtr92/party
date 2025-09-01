@@ -41,12 +41,9 @@ const OrganizePage = () => {
   ) => {
     const validBody = {
       ...body,
-      slots: Number.parseInt(body.slots as unknown as string),
-      remainingSlots: Number.parseInt(body.slots as unknown as string),
-      price:
-        body.price !== null
-          ? Number.parseInt(body.price as unknown as string)
-          : 0,
+      slots: Number(body.slots),
+      remainingSlots: String(body.slots),
+      price: body.price !== null ? Number(body.price) : 0,
     }
 
     await createEvent(validBody)

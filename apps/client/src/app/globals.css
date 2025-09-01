@@ -45,6 +45,56 @@ path {
   stroke-linecap: round;
 }
 
+input[type="range"] {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px;
+  color: black;
+  border-radius: 4px;
+  background-color: var(--secondary);
+  outline: 0;
+  transition-duration: 300ms;
+  aspect-ratio: 1/1;
+  position: relative;
+}
+
+input[type="checkbox"]:before {
+  opacity: 0;
+  position: absolute;
+  content: "X";
+  width: 15px;
+  height: 15px;
+  top: 0;
+  left: 0;
+  border-radius: 4px;
+  background-color: #00f279;
+  border-color: #000000;
+  color: #ffffff;
+  transition-duration: 300ms;
+  aspect-ratio: 1/1;
+}
+
+input[type="checkbox"]:checked {
+  background-color: var(--primary);
+  color: var(--secondary);
+}
+
+input[type="checkbox"]:checked:before {
+  opacity: 1;
+  width: 15px;
+  aspect-ratio: 1/1;
+  background-color: var(--primary);
+  border: 1px solid var(--secondary);
+  color: var(--secondary);
+}
+
 @keyframes shake {
   0% {
     transform: translate(0, 0) rotate(0deg);
