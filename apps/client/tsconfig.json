@@ -1,8 +1,14 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["leaflet"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "types": [
+      "leaflet"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,14 +25,29 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@client/*": ["./src/*"],
-      "@server/*": ["../server/src/*"],
-      "@common/*": ["../../packages/common/*"],
-      "@ui/*": ["../../packages/ui/src/*"]
+      "@client/*": [
+        "./src/*"
+      ],
+      "@server/*": [
+        "../server/src/*"
+      ],
+      "@common/*": [
+        "../../packages/common/*"
+      ],
+      "@ui/*": [
+        "../../packages/ui/src/*"
+      ]
     },
     "module": "esnext",
     "moduleResolution": "node"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

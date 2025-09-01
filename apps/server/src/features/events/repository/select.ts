@@ -3,7 +3,7 @@ import type {
   SearchEventsSchemaType,
 } from "@party/common"
 import { db } from "@server/db/client"
-import { eventSummary } from "@server/db/schema"
+import { events, eventSummary } from "@server/db/schema"
 import { and, asc, eq, gte, lte, count } from "drizzle-orm"
 
 export const existingDataEvent = (data: InsertEventSchemaType) => {
@@ -72,6 +72,12 @@ export const getEventByIdWithOwnerAndDetails = async (eventId: string) => {
 }
 
 const buildSearchConditions = (data: SearchEventsSchemaType) => {
+  const freeAsString = data.free?.valueOf().toString()
+  const freeAsBool = freeAsString === "true" ? true : false
+
+  console.log(eventSummary.eventPrice)
+  console.log(data.price)
+
   return and(
     data.name ? eq(eventSummary.eventName, data.name) : undefined,
     data.type ? eq(eventSummary.eventType, data.type) : undefined,
@@ -79,15 +85,13 @@ const buildSearchConditions = (data: SearchEventsSchemaType) => {
     data.startDate
       ? gte(eventSummary.eventStartDate, new Date(data.startDate))
       : undefined,
-    typeof data.free === "boolean"
-      ? eq(eventSummary.isFree, data.free)
+    freeAsBool === true
+      ? eq(eventSummary.isFree, Boolean(data.free))
       : undefined,
-    data.price
-      ? lte(eventSummary.eventPrice, data.price.toString())
-      : undefined,
+    data.price ? lte(eventSummary.eventPrice, data.price) : undefined,
     data.slots ? gte(eventSummary.totalSlots, Number(data.slots)) : undefined,
     data.remainingSlots
-      ? gte(eventSummary.availableSlots, data.remainingSlots)
+      ? gte(eventSummary.availableSlots, Number(data.remainingSlots))
       : undefined
   )
 }
